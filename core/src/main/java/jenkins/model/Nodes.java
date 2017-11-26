@@ -112,9 +112,13 @@ public class Nodes implements Saveable {
                     Nodes.this.nodes.put(name, n);
                 }
                 Nodes.this.nodes.keySet().removeAll(toRemove); // directory clean up will be handled by save
-                jenkins.updateComputerList();
-                jenkins.trimLabels();
+                updateAndTrim();
             }
+
+			private void updateAndTrim() {
+				jenkins.updateComputerList();
+                jenkins.trimLabels();
+			}
         });
         save();
     }
@@ -133,9 +137,13 @@ public class Nodes implements Saveable {
                 @Override
                 public void run() {
                     nodes.put(node.getNodeName(), node);
-                    jenkins.updateComputerList();
-                    jenkins.trimLabels();
+                    updateAndTrim();
                 }
+
+				private void updateAndTrim() {
+					jenkins.updateComputerList();
+                    jenkins.trimLabels();
+				}
             });
             // no need for a full save() so we just do the minimum
             if (node instanceof EphemeralNode) {
@@ -166,10 +174,14 @@ public class Nodes implements Saveable {
                         c.disconnect(OfflineCause.create(hudson.model.Messages._Hudson_NodeBeingRemoved()));
                     }
                     if (node == nodes.remove(node.getNodeName())) {
-                        jenkins.updateComputerList();
-                        jenkins.trimLabels();
+                        updateAndTrim();
                     }
                 }
+
+				private void updateAndTrim() {
+					jenkins.updateComputerList();
+					jenkins.trimLabels();
+				}
             });
             // no need for a full save() so we just do the minimum
             Util.deleteRecursive(new File(getNodesDir(), node.getNodeName()));
@@ -251,9 +263,13 @@ public class Nodes implements Saveable {
                     }
                 }
                 nodes.putAll(newNodes);
-                jenkins.updateComputerList();
-                jenkins.trimLabels();
+                updateAndTrim();
             }
+
+			private void updateAndTrim() {
+				jenkins.updateComputerList();
+                jenkins.trimLabels();
+			}
         });
     }
 
