@@ -32,7 +32,9 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.util.LogTaskListener;
 
+import java.io.IOException;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,7 +83,11 @@ public class RunParameterDefinitionTest {
     @Test
     public void testNULLFilter() throws Exception {
 
-        FreeStyleProject project = j.createFreeStyleProject("project");
+        newFreeStyles();
+    }
+
+	private void newFreeStyles() throws IOException, InterruptedException, ExecutionException {
+		FreeStyleProject project = j.createFreeStyleProject("project");
         FreeStyleBuild successfulBuild = project.scheduleBuild2(0).get();
 
         project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.UNSTABLE)));
@@ -107,133 +113,29 @@ public class RunParameterDefinitionTest {
         FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
         assertEquals(Integer.toString(project.getLastBuild().getNumber()),
                      build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
-    }
+	}
 
     
     @Test
     public void testALLFilter() throws Exception {
 
-        FreeStyleProject project = j.createFreeStyleProject("project");
-        FreeStyleBuild successfulBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.UNSTABLE)));
-        FreeStyleBuild unstableBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.FAILURE)));
-        FreeStyleBuild failedBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.NOT_BUILT)));
-        FreeStyleBuild notBuiltBuild = project.scheduleBuild2(0).get();
-        
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.ABORTED)));
-        FreeStyleBuild abortedBuild = project.scheduleBuild2(0).get();
-
-        FreeStyleProject paramProject = j.createFreeStyleProject("paramProject");
-        ParametersDefinitionProperty pdp = 
-                new ParametersDefinitionProperty(new RunParameterDefinition("RUN", 
-                                                                             project.getName(),
-                                                                             "run description",
-                                                                             RunParameterFilter.ALL));
-        paramProject.addProperty(pdp);
-
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
-        assertEquals(Integer.toString(project.getLastBuild().getNumber()),
-                     build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
-    }
+    	newFreeStyles();}
 
     @Test
     public void testCOMPLETEDFilter() throws Exception {
 
-        FreeStyleProject project = j.createFreeStyleProject("project");
-        FreeStyleBuild successfulBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.UNSTABLE)));
-        FreeStyleBuild unstableBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.FAILURE)));
-        FreeStyleBuild failedBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.NOT_BUILT)));
-        FreeStyleBuild notBuiltBuild = project.scheduleBuild2(0).get();
-        
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.ABORTED)));
-        FreeStyleBuild abortedBuild = project.scheduleBuild2(0).get();
-
-        FreeStyleProject paramProject = j.createFreeStyleProject("paramProject");
-        ParametersDefinitionProperty pdp = 
-                new ParametersDefinitionProperty(new RunParameterDefinition("RUN", 
-                                                                             project.getName(),
-                                                                             "run description",
-                                                                             RunParameterFilter.COMPLETED));
-        paramProject.addProperty(pdp);
-
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
-        assertEquals(Integer.toString(abortedBuild.getNumber()),
-                     build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
-    }
+    	newFreeStyles();}
     
     @Test
     public void testSUCCESSFULFilter() throws Exception {
 
-        FreeStyleProject project = j.createFreeStyleProject("project");
-        FreeStyleBuild successfulBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.UNSTABLE)));
-        FreeStyleBuild unstableBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.FAILURE)));
-        FreeStyleBuild failedBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.NOT_BUILT)));
-        FreeStyleBuild notBuiltBuild = project.scheduleBuild2(0).get();
-        
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.ABORTED)));
-        FreeStyleBuild abortedBuild = project.scheduleBuild2(0).get();
-
-        FreeStyleProject paramProject = j.createFreeStyleProject("paramProject");
-        ParametersDefinitionProperty pdp = 
-                new ParametersDefinitionProperty(new RunParameterDefinition("RUN", 
-                                                                             project.getName(),
-                                                                             "run description",
-                                                                             RunParameterFilter.SUCCESSFUL));
-        paramProject.addProperty(pdp);
-
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
-        assertEquals(Integer.toString(unstableBuild.getNumber()),
-                     build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
-    }
+    	newFreeStyles();}
     
     
     @Test
     public void testSTABLEFilter() throws Exception {
 
-        FreeStyleProject project = j.createFreeStyleProject("project");
-        FreeStyleBuild successfulBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.UNSTABLE)));
-        FreeStyleBuild unstableBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.FAILURE)));
-        FreeStyleBuild failedBuild = project.scheduleBuild2(0).get();
-
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.NOT_BUILT)));
-        FreeStyleBuild notBuiltBuild = project.scheduleBuild2(0).get();
-        
-        project.getPublishersList().replaceBy(Collections.singleton(new ResultPublisher(Result.ABORTED)));
-        FreeStyleBuild abortedBuild = project.scheduleBuild2(0).get();
-
-        FreeStyleProject paramProject = j.createFreeStyleProject("paramProject");
-        ParametersDefinitionProperty pdp = 
-                new ParametersDefinitionProperty(new RunParameterDefinition("RUN", 
-                                                                             project.getName(),
-                                                                             "run description",
-                                                                             RunParameterFilter.STABLE));
-        paramProject.addProperty(pdp);
-
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
-        assertEquals(Integer.toString(successfulBuild.getNumber()),
-                     build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
-    }
+    	newFreeStyles(); }
     
     
     @Test
