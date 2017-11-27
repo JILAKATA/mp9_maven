@@ -50,4 +50,8 @@ public class TestPartIdStrategy {
 		IdStrategy.CaseSensitive obj = new IdStrategy.CaseSensitive();
 		assertEquals("na", obj.idFromFilename("na"));
 	}
+	public void testIdFromFileNameTest10() {
+		IdStrategy.CaseSensitive obj = new IdStrategy.CaseSensitive();
+		assertEquals("hello", obj.idFromFilename("hello"));
+	}
 }
